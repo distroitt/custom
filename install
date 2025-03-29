@@ -1,27 +1,43 @@
 #!/bin/bash
-. /etc/os-release
-if [[ "$ID" == "ubuntu"* ]]; then
-  sudo apt update; sudo apt install -y build-essential cmake ninja-build git python3
-elif [[ "$ID" == "arch"* ]]; then
-  sudo pacman -Syu --noconfirm; sudo pacman -S --noconfirm cmake ninja git python base-devel
-elif [[ "$ID" == "fedora"* ]]; then
-  sudo dnf update; sudo dnf install cmake ninja-build git python3 gcc gcc-c++ make
+
+# Определение операционной системы
+OS_TYPE=$(uname -s)
+
+if [ "$OS_TYPE" == "Darwin" ]; then
+  # macOS путь
+  echo "Определена macOS система"
+  brew update; brew install cmake ninja git python
+elif [ -f /etc/os-release ]; then
+  # Linux путь
+  . /etc/os-release
+  if [[ "$ID" == "ubuntu"* ]]; then
+    sudo apt update; sudo apt install -y build-essential cmake ninja-build git python3
+  elif [[ "$ID" == "arch"* ]]; then
+    sudo pacman -Syu --noconfirm; sudo pacman -S --noconfirm cmake ninja git python base-devel
+  elif [[ "$ID" == "fedora"* ]]; then
+    sudo dnf update; sudo dnf install cmake ninja-build git python3 gcc gcc-c++ make
+  fi
+else
+  echo "Неподдерживаемая операционная система"
+  exit 1
 fi
+
 # Скачивание исходников
 git clone https://github.com/llvm/llvm-project.git --depth 1
-sudo mkdir /usr/local/lib/dobri-clang-format
+sudo mkdir -p /usr/local/lib/dobri-clang-format
 sudo cp dobri-clang-format.py /usr/local/lib/dobri-clang-format/
 cp ./ClangFormat.cpp llvm-project/clang/tools/clang-format/
 cp dobri-clang-format.py llvm-project/clang/tools/clang-format/
 cd llvm-project
+
 # Сборка кастомного clang-format
-mkdir build
+mkdir -p build
 cd build
 cmake -G Ninja -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" -DCMAKE_BUILD_TYPE=Release ../llvm
 ninja clang-format
 
-# Установка в системный путь
-sudo cp bin/clang-format /usr/local/bin/dobri-clang-format
-cd ../..
-rm -rf llvm-project/
-echo "Установка завершена! Используйте custom-clang-format."
+# Установка в системный путь, учитывая особенности macOS
+if [ "$OS_TYPE" == "Darwin" ]; then
+  # В macOS мы используем тот же путь, но могут потребоваться права администратора
+  sudo cp bin/clang-format /usr/local/bin/dobri-clang-format
+  # Добавим информацию для
