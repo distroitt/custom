@@ -20,7 +20,7 @@ fi
 
 # Установка зависимостей
 if [[ "$OS" == "linux" ]]; then
-  sudo ${PACKAGE_MANAGER} update; sudo ${PACKAGE_MANAGER} install -y build-essential cmake ninja-build git python3
+  sudo ${PACKAGE_MANAGER} update; sudo ${PACKAGE_MANAGER} install -y cmake ninja-build git python3
 elif [[ "$OS" == "macos" ]]; then
   brew update && brew install cmake ninja git
 fi
