@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Проверка ОС
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  OS="linux"
+  if command -v apt &> /dev/null; then
+    PACKAGE_MANAGER="apt"
+  elif command -v yum &> /dev/null; then
+    PACKAGE_MANAGER="yum"
+  elif command -v dnf &> /dev/null; then
+    PACKAGE_MANAGER="dnf"
+  fi
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  OS="macos"
+  PACKAGE_MANAGER="brew"
+else
+  echo "Unsupported OS: $OSTYPE"
+  exit 1
+fi
+
+# Установка зависимостей
+if [[ "$OS" == "linux" ]]; then
+  sudo ${PACKAGE_MANAGER} update; sudo ${PACKAGE_MANAGER} install -y build-essential cmake ninja-build git python3
+elif [[ "$OS" == "macos" ]]; then
+  brew update && brew install cmake ninja git
+fi
+
+# Скачивание исходников
+git clone https://github.com/llvm/llvm-project.git --depth 1
+cp ./ClangFormat.cpp llvm-project/clang/tools/clang-format/
+cp dobri-clang-format.py llvm-project/clang/tools/clang-format/
+cd llvm-project
+# Сборка кастомного clang-format
+mkdir build
+cd build
+cmake -G Ninja -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" -DCMAKE_BUILD_TYPE=Release ../llvm
+ninja clang-format
+
+# Установка в системный путь
+sudo cp bin/clang-format /usr/local/bin/dobri-clang-format
+rm -rf llvm-project/
+echo "Установка завершена! Используйте custom-clang-format."
