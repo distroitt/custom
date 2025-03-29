@@ -27,7 +27,8 @@ fi
 
 # Скачивание исходников
 git clone https://github.com/llvm/llvm-project.git --depth 1
-sudo cp dobri-clang-format.py /usr/local/lib/
+sudo mkdir /usr/local/lib/dobri-clang-format
+sudo cp dobri-clang-format.py /usr/local/lib/dobri-clang-format/
 cp ./ClangFormat.cpp llvm-project/clang/tools/clang-format/
 cp dobri-clang-format.py llvm-project/clang/tools/clang-format/
 cd llvm-project
