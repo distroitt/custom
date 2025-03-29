@@ -737,7 +737,7 @@ std::string runCustomFormatterAndGetResult(const std::string &content) {
   
   // Запускаем Python-скрипт для форматирования
   std::ostringstream command;
-  command << "python3 /usr/lib/dobri-clang-format/dobri-clang-format.py " << "\"" << input_file << "\" \"" << output_file << "\"";
+  command << "python3 /usr/local/lib/dobri-clang-format/dobri-clang-format.py " << "\"" << input_file << "\" \"" << output_file << "\"";
   
   int result = std::system(command.str().c_str());
   
