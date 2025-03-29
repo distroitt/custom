@@ -5,10 +5,12 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   OS="linux"
   if command -v apt &> /dev/null; then
     PACKAGE_MANAGER="apt"
+    PACKAGES="build-essential cmake ninja-build git python3"
   elif command -v yum &> /dev/null; then
     PACKAGE_MANAGER="yum"
   elif command -v dnf &> /dev/null; then
     PACKAGE_MANAGER="dnf"
+    PACKAGES="cmake ninja-build git python3 gcc gcc-c++ make"
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   OS="macos"
@@ -20,7 +22,7 @@ fi
 
 # Установка зависимостей
 if [[ "$OS" == "linux" ]]; then
-  sudo ${PACKAGE_MANAGER} update; sudo ${PACKAGE_MANAGER} install -y cmake ninja-build git python3
+  sudo ${PACKAGE_MANAGER} update; sudo ${PACKAGE_MANAGER} install -y ${PACKAGES}
 elif [[ "$OS" == "macos" ]]; then
   brew update && brew install cmake ninja git
 fi
