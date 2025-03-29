@@ -41,5 +41,5 @@ ninja clang-format
 # Установка в системный путь
 sudo cp bin/clang-format /usr/local/bin/dobri-clang-format
 cd ../..
-rm -rf ../llvm-project/
+rm -rf llvm-project/
 echo "Установка завершена! Используйте custom-clang-format."
