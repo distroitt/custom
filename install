@@ -11,7 +11,7 @@ elif [ -f /etc/os-release ]; then
   elif [[ "$ID" == "arch"* ]]; then
     sudo pacman -Syu --noconfirm; sudo pacman -S --noconfirm cmake ninja git python base-devel
   elif [[ "$ID" == "fedora"* ]]; then
-    sudo dnf update; sudo dnf install cmake ninja-build git python3 gcc gcc-c++ make
+    sudo dnf update; sudo dnf install -y cmake ninja-build git python3 gcc gcc-c++ make
   fi
 else
   echo "Неподдерживаемая операционная система"
