@@ -1,19 +1,10 @@
 #!/bin/bash
 
-# Определение операционной системы
 OS_TYPE=$(uname -s)
 
-sudo -v
-# Держим timestamp активным в фоне
-(while true; do sudo -v; sleep 50; done) &
-SUDO_PID=$!
-trap "kill $SUDO_PID" EXIT
 if [ "$OS_TYPE" == "Darwin" ]; then
-  # macOS путь
-  echo "Определена macOS система"
   brew update; brew install cmake ninja git python
 elif [ -f /etc/os-release ]; then
-  # Linux путь
   . /etc/os-release
   if [[ "$ID" == "ubuntu"* ]]; then
     sudo apt update; sudo apt install -y build-essential cmake ninja-build git python3
@@ -29,13 +20,11 @@ fi
 
 sudo mkdir -p /usr/local/lib/dobri-clang-format
 sudo cp dobri-clang-format.py /usr/local/lib/dobri-clang-format/
-# Скачивание исходников
 git clone https://github.com/llvm/llvm-project.git --depth 1
 cp ./ClangFormat.cpp llvm-project/clang/tools/clang-format/
 cp dobri-clang-format.py llvm-project/clang/tools/clang-format/
 cd llvm-project
 
-# Сборка кастомного clang-format
 mkdir -p build
 cd build
 cmake -G Ninja -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" -DCMAKE_BUILD_TYPE=Release ../llvm
@@ -44,4 +33,4 @@ ninja clang-format
 sudo cp bin/clang-format /usr/local/bin/dobri-clang-format
 cd ../..
 rm -rf llvm-project/
-echo "Установка завершена! Используйте custom-clang-format."
+echo "Установка завершена! Используйте dobri-clang-format."
