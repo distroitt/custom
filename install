@@ -5,7 +5,7 @@ OS_TYPE=$(uname -s)
 
 if [ "$OS_TYPE" == "Darwin" ]; then
   # macOS путь
-  echo "Определена macOS система"
+  sudo echo "Определена macOS система"
   brew update; brew install cmake ninja git python
 elif [ -f /etc/os-release ]; then
   # Linux путь
