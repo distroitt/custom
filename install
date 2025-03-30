@@ -36,8 +36,7 @@ cd build
 cmake -G Ninja -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra" -DCMAKE_BUILD_TYPE=Release ../llvm
 ninja clang-format
 
-# Установка в системный путь, учитывая особенности macOS
-if [ "$OS_TYPE" == "Darwin" ]; then
-  # В macOS мы используем тот же путь, но могут потребоваться права администратора
-  sudo cp bin/clang-format /usr/local/bin/dobri-clang-format
-  # Добавим информацию для
+sudo cp bin/clang-format /usr/local/bin/dobri-clang-format
+cd ../..
+rm -rf llvm-project/
+echo "Установка завершена! Используйте custom-clang-format."
